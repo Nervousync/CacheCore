@@ -5,9 +5,9 @@
     <artifactId>cache-core</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>Pure Java Utils</name>
+    <name>Cache Core Package</name>
     <url>https://nervousync.org/project/cache/core</url>
-    <description>Java Utils collections, development by Nervousync Studio (NSYC)</description>
+    <description>Cache Core Package, development by Nervousync Studio (NSYC)</description>
     <issueManagement>
         <url>https://github.com/Nervousync/CacheCore/issues</url>
         <system>Github Issues</system>
@@ -26,7 +26,7 @@
         <developerConnection>scm:git:https://github.com/Nervousync/CacheCore.git</developerConnection>
     </scm>
     <organization>
-        <url>https://development.nervousync.org/</url>
+        <url>https://nervousync.org/</url>
         <name>Nervousync Studio</name>
     </organization>
     <developers>
@@ -42,10 +42,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>5.6.2</junit.jupiter.version>
         <junit.platform.version>1.6.2</junit.platform.version>
-        <memcached.version>2.4.6</memcached.version>
-        <jedis.version>3.3.0</jedis.version>
-        <netty.version>4.1.52.Final</netty.version>
-        <lettuce.version>5.3.3.RELEASE</lettuce.version>
     </properties>
     <dependencies>
         <dependency>
