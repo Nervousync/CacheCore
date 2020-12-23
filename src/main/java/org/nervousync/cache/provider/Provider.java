@@ -21,7 +21,7 @@ package org.nervousync.cache.provider;
  * @author Steven Wee	<a href="mailto:wmkm0113@Hotmail.com">wmkm0113@Hotmail.com</a>
  * @version $Revision: 1.0 $ $Date: 9/14/2020 10:30 AM $
  */
-public interface CacheProvider {
+public interface Provider {
 
 	/**
 	 * Set key-value to cache server and set expire time

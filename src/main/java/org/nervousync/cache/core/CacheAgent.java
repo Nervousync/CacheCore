@@ -16,7 +16,7 @@
  */
 package org.nervousync.cache.core;
 
-import org.nervousync.cache.provider.impl.AbstractCacheProvider;
+import org.nervousync.cache.provider.impl.AbstractProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,14 +30,14 @@ import java.lang.reflect.InvocationTargetException;
  * @author Steven Wee	<a href="mailto:wmkm0113@Hotmail.com">wmkm0113@Hotmail.com</a>
  * @version $Revision: 1.0 $ $Date: Jun 26, 2018 $
  */
-public final class CacheInstance {
+public final class CacheAgent {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	/**
 	 * Current cache provider implement object
 	 */
-	private final AbstractCacheProvider cacheProvider;
+	private final AbstractProvider cacheProvider;
 	
 	/**
 	 * Constructor
@@ -46,10 +46,10 @@ public final class CacheInstance {
 	 * @throws CacheException           Generate instance of provider failed
 	 *                                  or provider implement class not extends with AbstractCacheProvider
 	 */
-	public CacheInstance(CacheConfig cacheConfig, Class<?> providerImplClass) throws CacheException {
-		if (providerImplClass != null && AbstractCacheProvider.class.isAssignableFrom(providerImplClass)) {
+	public CacheAgent(CacheConfig cacheConfig, Class<?> providerImplClass) throws CacheException {
+		if (providerImplClass != null && AbstractProvider.class.isAssignableFrom(providerImplClass)) {
 			try {
-				this.cacheProvider = (AbstractCacheProvider)providerImplClass.getDeclaredConstructor().newInstance();
+				this.cacheProvider = (AbstractProvider)providerImplClass.getDeclaredConstructor().newInstance();
 				this.cacheProvider.initialize(cacheConfig);
 				
 				return;

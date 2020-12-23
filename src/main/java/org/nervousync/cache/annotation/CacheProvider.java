@@ -16,8 +16,6 @@
  */
 package org.nervousync.cache.annotation;
 
-import org.nervousync.commons.core.Globals;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -29,9 +27,9 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface CacheProviderImpl {
+public @interface CacheProvider {
 
 	String name();
 
-	int defaultPort() default Globals.DEFAULT_VALUE_INT;
+	int defaultPort();
 }

@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.nervousync.utils;
+package org.nervousync.cache.core;
 
-import org.nervousync.cache.annotation.CacheProviderImpl;
-import org.nervousync.cache.provider.CacheProvider;
+import org.nervousync.cache.annotation.CacheProvider;
+import org.nervousync.cache.provider.Provider;
 import org.nervousync.commons.beans.xml.cache.CacheConfig;
-import org.nervousync.cache.core.CacheInstance;
 import org.nervousync.exceptions.cache.CacheException;
 import org.nervousync.commons.core.Globals;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,23 +31,23 @@ import java.util.*;
  * @author Steven Wee	<a href="mailto:wmkm0113@Hotmail.com">wmkm0113@Hotmail.com</a>
  * @version $Revision: 1.0 $ $Date: 11/21/2019 11:20 AM $
  */
-public final class CacheUtils {
+public final class CacheCore {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CacheUtils.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CacheCore.class);
 
 	//  Single Instance Mode
-	private static volatile CacheUtils INSTANCE = null;
+	private static volatile CacheCore INSTANCE = null;
 
 	//  Registered cache provider implements
 	private static final Hashtable<String, Class<?>> REGISTERED_PROVIDERS = new Hashtable<>();
 
 	//  Registered cache instance
-	private Hashtable<String, CacheInstance> registeredCache;
+	private Hashtable<String, CacheAgent> registeredCache;
 
 	static {
-		ServiceLoader.load(CacheProvider.class).forEach(cacheProvider -> {
-			if (cacheProvider.getClass().isAnnotationPresent(CacheProviderImpl.class)) {
-				registerProvider(cacheProvider.getClass());
+		ServiceLoader.load(Provider.class).forEach(provider -> {
+			if (provider.getClass().isAnnotationPresent(CacheProvider.class)) {
+				registerProvider(provider.getClass());
 			}
 		});
 		if (LOGGER.isDebugEnabled()) {
@@ -58,7 +58,7 @@ public final class CacheUtils {
 	/**
 	 * Constructor
 	 */
-	private CacheUtils() {
+	private CacheCore() {
 		this.registeredCache = new Hashtable<>();
 	}
 
@@ -69,15 +69,15 @@ public final class CacheUtils {
 	 * </p>
 	 * @return  initialized instance of cache utils
 	 */
-	public static CacheUtils getInstance() {
-		if (CacheUtils.INSTANCE == null) {
-			synchronized (CacheUtils.class) {
-				if (CacheUtils.INSTANCE == null) {
-					CacheUtils.INSTANCE = new CacheUtils();
+	public static CacheCore getInstance() {
+		if (CacheCore.INSTANCE == null) {
+			synchronized (CacheCore.class) {
+				if (CacheCore.INSTANCE == null) {
+					CacheCore.INSTANCE = new CacheCore();
 				}
 			}
 		}
-		return CacheUtils.INSTANCE;
+		return CacheCore.INSTANCE;
 	}
 
 	/**
@@ -86,8 +86,8 @@ public final class CacheUtils {
 	 * @return              initialize result
 	 */
 	public static boolean isInitialized(String cacheName) {
-		return CacheUtils.INSTANCE == null ? Globals.DEFAULT_VALUE_BOOLEAN
-				: CacheUtils.INSTANCE.registeredCache.containsKey(cacheName);
+		return CacheCore.INSTANCE == null ? Globals.DEFAULT_VALUE_BOOLEAN
+				: CacheCore.INSTANCE.registeredCache.containsKey(cacheName);
 	}
 
 	/**
@@ -103,9 +103,9 @@ public final class CacheUtils {
 	 * @param providerClass     cache provider class
 	 */
 	public static void registerProvider(Class<?> providerClass) {
-		if (providerClass != null && providerClass.isAnnotationPresent(CacheProviderImpl.class)) {
-			CacheProviderImpl cacheProviderImpl = providerClass.getAnnotation(CacheProviderImpl.class);
-			REGISTERED_PROVIDERS.put(cacheProviderImpl.name(), providerClass);
+		if (providerClass != null && providerClass.isAnnotationPresent(CacheProvider.class)) {
+			CacheProvider cacheProvider = providerClass.getAnnotation(CacheProvider.class);
+			REGISTERED_PROVIDERS.put(cacheProvider.name(), providerClass);
 		}
 	}
 
@@ -133,7 +133,7 @@ public final class CacheUtils {
 
 		try {
 			this.registeredCache.put(cacheName,
-					new CacheInstance(cacheConfig, REGISTERED_PROVIDERS.get(cacheConfig.getProviderName())));
+					new CacheAgent(cacheConfig, REGISTERED_PROVIDERS.get(cacheConfig.getProviderName())));
 		} catch (CacheException e) {
 			LOGGER.error("Generate nervousync cache instance error! ");
 			if (LOGGER.isDebugEnabled()) {
@@ -276,12 +276,12 @@ public final class CacheUtils {
 	 * Destroy all registered cache instance
 	 */
 	public void destroy() {
-		this.registeredCache.values().forEach(CacheInstance::destroy);
+		this.registeredCache.values().forEach(CacheAgent::destroy);
 		this.registeredCache = null;
-		CacheUtils.INSTANCE = null;
+		CacheCore.INSTANCE = null;
 	}
 
 	private Object readResolve() {
-		return CacheUtils.INSTANCE;
+		return CacheCore.INSTANCE;
 	}
 }

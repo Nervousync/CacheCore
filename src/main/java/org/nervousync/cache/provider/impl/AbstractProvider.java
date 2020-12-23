@@ -18,8 +18,8 @@ package org.nervousync.cache.provider.impl;
 
 import java.util.List;
 
-import org.nervousync.cache.annotation.CacheProviderImpl;
-import org.nervousync.cache.provider.CacheProvider;
+import org.nervousync.cache.annotation.CacheProvider;
+import org.nervousync.cache.provider.Provider;
 import org.nervousync.exceptions.cache.CacheException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ import org.nervousync.commons.core.Globals;
  * @author Steven Wee	<a href="mailto:wmkm0113@Hotmail.com">wmkm0113@Hotmail.com</a>
  * @version $Revision: 1.0 $ $Date: Apr 25, 2017 3:01:30 PM $
  */
-public abstract class AbstractCacheProvider implements CacheProvider {
+public abstract class AbstractProvider implements Provider {
 	
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -66,11 +66,11 @@ public abstract class AbstractCacheProvider implements CacheProvider {
 	/**
 	 * Default constructor
 	 */
-	public AbstractCacheProvider() throws CacheException {
-		if (this.getClass().isAnnotationPresent(CacheProviderImpl.class)) {
-			this.defaultPort = this.getClass().getAnnotation(CacheProviderImpl.class).defaultPort();
+	public AbstractProvider() throws CacheException {
+		if (this.getClass().isAnnotationPresent(CacheProvider.class)) {
+			this.defaultPort = this.getClass().getAnnotation(CacheProvider.class).defaultPort();
 		} else {
-			throw new CacheException("Provider implement class must annotation with " + CacheProviderImpl.class.getName());
+			throw new CacheException("Provider implement class must annotation with " + CacheProvider.class.getName());
 		}
 	}
 	
